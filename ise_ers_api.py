@@ -31,7 +31,7 @@ class IseErsApi:
             import urllib3
             urllib3.disable_warnings()
         self.kwargs = {
-            'verify' : False,
+            'verify' : verify,
         }
 
 
