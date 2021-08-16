@@ -30,13 +30,46 @@ class IseErsApi:
         if not verify:
             import urllib3
             urllib3.disable_warnings()
+        self.proxies = {}
         self.kwargs = {
             'verify' : verify,
         }
 
+        self.trust_env = True
+
+    def trust_env(self, b):
+        '''Enable/Disable the trust_env of https sessions overriding the system proxy and ca store.
+
+        By default the system / environment is used.
+
+        Args:
+            b (bool): False - disable cert check and proxies
+                      True - enable default system cert check and proxies
+        '''
+        self.trust_env = b
+
+
+    def set_proxy(self, https):
+        '''Configures the HTTP and HTTPS Proxy to use for this session, overriding the system proxy
+
+        By default the system / environment HTTPS_PROXY is used.
+
+        Args:
+            https (str): proxy to use for HTTPS session.
+                If None, revert to default system proxy
+        '''
+        if https is None:
+            self.proxies = {}
+        else:
+            self.proxies = {
+                'https':  https
+            }
 
     def _session(self):
         s=requests.Session()
+        if len(self.proxies) > 0:
+            s.proxies.update(self.proxies)
+        s.trust_env = self.trust_env
         s.auth = self.auth
         s.headers.update({'accept': "application/json",'cache-control': "no-cache"})
         return s
@@ -119,7 +152,7 @@ if __name__ == '__main__':
 
     ise = IseErsApi(host=sys.argv[1], user=os.environ.get('ISE_USER'), password=os.environ.get('ISE_PASSWORD'), verify=False)
 
-    result = ise.export_all_network_elements()
-    for i in result:
-        for j in i['NetworkDeviceIPList']:
-            print (j['ipaddress'] + '/' + str(j['mask']))
+    # result = ise.export_all_network_elements()
+    # for i in result:
+    #     for j in i['NetworkDeviceIPList']:
+    #         print (j['ipaddress'] + '/' + str(j['mask']))
