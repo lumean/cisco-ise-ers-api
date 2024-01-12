@@ -13,7 +13,7 @@ class IseErsApi:
     port = '9060'
 
     def __init__(self, host, user, password, verify):
-        ''' Create a new IseErsApi instance 
+        ''' Create a new IseErsApi instance
         Args:
             host (str): IP or hostname (without https://) of ISE Node
             user (str): Username for ers API
@@ -110,7 +110,7 @@ class IseErsApi:
     def network_device_get_all(self):
         '''Gets all network devices from ISE, including pagination.
 
-        Returns json dict, as returned by ISE; resources of all pages are merged into 
+        Returns json dict, as returned by ISE; resources of all pages are merged into
         result['SearchResult']['resources'] array.
         https://developer.cisco.com/docs/identity-services-engine/2.6/#!network-device/get-all
 
@@ -131,7 +131,7 @@ class IseErsApi:
                 all_devices['SearchResult']['resources'] += jsondata['SearchResult']['resources']
             else:
                 break
-        
+
         s.close()
         return all_devices
 
