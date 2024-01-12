@@ -78,6 +78,8 @@ class IseErsApi:
         '''
         Args:
             response (requests.Response)
+
+        Returns:  dict  json.loads of response.
         '''
         self.logger.info(url)
         res = s.get(url, **self.kwargs)
@@ -134,6 +136,19 @@ class IseErsApi:
 
         s.close()
         return all_devices
+
+    def version_info(self):
+        '''See https://developer.cisco.com/docs/identity-services-engine/latest/#!adminuser
+        '''
+        path = '/ers/config/adminuser/versioninfo'
+        s = self._session()
+        # max page-size for ise is 100.
+        full_url = f'{self.url + path}'
+        jsondata = self._get(s, full_url)
+        version = jsondata
+
+        s.close()
+        return version
 
 
 def _setup_logging():
